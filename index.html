@@ -65,10 +65,10 @@
         .fade-in { animation: fadeIn 0.3s ease-out forwards; opacity: 0; transform: translateY(10px); }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
-        /* Toast 通知樣式 */
+        /* 美化的 Toast 提示 (取代 alert) */
         #toast-container { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100; pointer-events: none; width: 90%; max-width: 400px; text-align: center; }
-        .toast { background: rgba(43, 32, 26, 0.9); color: white; padding: 10px 20px; border-radius: 20px; margin-bottom: 10px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; pointer-events: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .toast.show { opacity: 1; }
+        .toast { background: rgba(43, 32, 26, 0.95); color: white; padding: 12px 24px; border-radius: 30px; margin-bottom: 10px; font-size: 0.95rem; opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); transform: translateY(-20px); pointer-events: auto; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); font-weight: 500; letter-spacing: 0.5px; }
+        .toast.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body class="w-full h-full sm:py-4">
@@ -113,9 +113,15 @@
                     </div>
                 </div>
             </div>
-            <button id="restart-btn" class="p-2 text-gray-400 hover:text-[#5FA09D] hover:bg-gray-50 rounded-full transition" title="重新開始諮詢">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-            </button>
+            
+            <div class="flex gap-1 items-center">
+                <a id="open-full-btn" href="#" target="_blank" class="hidden p-2 text-white bg-[#5FA09D] rounded-full text-xs font-bold px-3 hover:bg-[#4A8B89] transition shadow-sm no-underline">
+                    ↗ 全螢幕錄音
+                </a>
+                <button id="restart-btn" class="p-2 text-gray-400 hover:text-[#5FA09D] hover:bg-gray-50 rounded-full transition" title="重新開始諮詢">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                </button>
+            </div>
         </header>
 
         <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-5 scroll-smooth no-scrollbar pb-24"></div>
@@ -142,7 +148,7 @@
 
             <div id="preview-area" class="flex gap-3 mb-3 overflow-x-auto px-1 hidden pb-2"></div>
             <div id="recording-status" class="hidden flex items-center justify-center p-2 text-red-500 text-sm font-bold animate-pulse">
-                <span>🔴 錄音中... 再次點擊結束 (將暫存)</span>
+                <span>🔴 錄音中... (點擊麥克風停止)</span>
             </div>
 
             <form id="chat-form" class="relative flex items-end gap-2 bg-gray-50 p-1.5 rounded-[1.5rem] border border-gray-200 focus-within:ring-2 focus-within:ring-[#F4D35E] focus-within:border-[#F4D35E] transition-all">
@@ -150,6 +156,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                     <input type="file" id="image-input" accept="image/*" multiple class="hidden">
                 </label>
+                
                 <button type="button" id="mic-btn" class="p-2.5 text-gray-400 hover:text-red-500 cursor-pointer transition rounded-full hover:bg-gray-200 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
                 </button>
@@ -162,8 +169,8 @@
     </main>
 
     <script>
-        // ★★★ 請將您的 GAS 網頁應用程式網址填入這裡 (exec 結尾) ★★★
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw5iZDojslvlkgU4_a2rx1KZV5uaUv1UMgS_nptShxqjOr8mFh1rcSaGhT3sNrprBEN/exec"; 
+        // ★★★ 請確認這裡填入的是您的 GAS 網頁應用程式網址 (exec 結尾) ★★★
+        const GAS_API_URL = "https://script.google.com/macros/s/您的ID/exec"; 
 
         const loginScreen = document.getElementById('login-screen');
         const loginForm = document.getElementById('login-form');
@@ -174,6 +181,7 @@
         const previewArea = document.getElementById('preview-area');
         const micBtn = document.getElementById('mic-btn');
         const recordingStatus = document.getElementById('recording-status');
+        const openFullBtn = document.getElementById('open-full-btn');
         
         let userData = { name: '', email: '' };
         let selectedImages = [];
@@ -183,7 +191,16 @@
         let isRecording = false;
         let pendingAudioBlob = null;
 
-        // UI 提示工具 (取代 alert)
+        function checkEnvironment() {
+            if (window.self !== window.top) {
+                micBtn.classList.add('hidden');
+                openFullBtn.classList.remove('hidden');
+                openFullBtn.href = window.location.href;
+                messageInput.placeholder = "嵌入模式無法錄音，請點擊上方開啟全螢幕";
+            }
+        }
+        checkEnvironment();
+
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -266,16 +283,12 @@
             imageInput.value = '';
         });
 
-        // 錄音邏輯
+        // 錄音邏輯 (無 Alert 版)
         micBtn.addEventListener('click', async () => {
+            // 如果已經有暫存，直接清除並開始新的，不跳詢問視窗
             if (pendingAudioBlob) {
-                // 用自製的 UI 取代 confirm
-                if (window.confirm("您已經有一段錄音等待發送，確定要重新錄製嗎？舊的錄音將會被刪除。")) {
-                    pendingAudioBlob = null;
-                    updatePreview();
-                } else {
-                    return;
-                }
+                pendingAudioBlob = null;
+                updatePreview();
             }
 
             if (!isRecording) {
@@ -297,9 +310,10 @@
                     messageInput.placeholder = "錄音中... (點擊麥克風停止)";
                     messageInput.disabled = true;
                 } catch (err) {
-                    showToast("無法存取麥克風，請用瀏覽器直接開啟 GitHub 頁面。");
+                    showToast("無法存取麥克風，請確認瀏覽器權限或開啟完整視窗。");
                 }
             } else {
+                // 停止錄音
                 mediaRecorder.stop();
                 isRecording = false;
                 micBtn.classList.remove('recording-pulse', 'text-red-500', 'bg-red-50');
@@ -340,9 +354,10 @@
             e.preventDefault();
             const text = messageInput.value.trim();
             
+            // 如果正在錄音，點擊發送鍵視為「停止錄音」
             if (isRecording) {
                 micBtn.click();
-                setTimeout(()=>showToast("錄音已結束並暫存，請再次點擊「發送」按鈕。"), 300);
+                showToast("錄音已結束並暫存，請再次點擊「發送」按鈕。");
                 return;
             }
 
@@ -444,7 +459,8 @@
         function scrollToBottom() { setTimeout(() => { chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }, 100); }
         
         document.getElementById('restart-btn').addEventListener('click', () => { 
-            if(confirm('確定要重新開始諮詢嗎？')) {
+            // 這裡也用原生 confirm 比較安全，但為了統一體驗，您可以選擇保留或移除
+            if(window.confirm('確定要重新開始諮詢嗎？')) {
                 userData = { name: '', email: '' };
                 selectedImages = [];
                 pendingAudioBlob = null;
