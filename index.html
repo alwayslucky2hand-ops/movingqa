@@ -41,21 +41,8 @@
             font-size: 0.95rem; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        
-        .bubble-user { 
-            background-color: var(--brand-teal); 
-            color: white; 
-            border-bottom-right-radius: 0.25rem; 
-            margin-left: auto; 
-        }
-        
-        .bubble-ai { 
-            background-color: #ffffff; 
-            color: var(--brand-text); 
-            border-bottom-left-radius: 0.25rem; 
-            margin-right: auto; 
-            border: 1px solid #F3F4F6;
-        }
+        .bubble-user { background-color: var(--brand-teal); color: white; border-bottom-right-radius: 0.25rem; margin-left: auto; }
+        .bubble-ai { background-color: #ffffff; color: var(--brand-text); border-bottom-left-radius: 0.25rem; margin-right: auto; border: 1px solid #F3F4F6; }
 
         .ai-content strong { color: var(--brand-teal); font-weight: 700; background-color: rgba(95, 160, 157, 0.1); padding: 0 4px; border-radius: 4px; }
         .ai-content h3, .ai-content h4 { font-size: 1.1em; font-weight: 700; margin-top: 12px; margin-bottom: 8px; color: var(--brand-text); border-left: 4px solid var(--brand-teal); padding-left: 10px; line-height: 1.4; }
@@ -68,7 +55,6 @@
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
         
-        /* 錄音動畫 */
         .recording-pulse { animation: pulse-red 1.5s infinite; }
         @keyframes pulse-red {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
@@ -78,11 +64,18 @@
 
         .fade-in { animation: fadeIn 0.3s ease-out forwards; opacity: 0; transform: translateY(10px); }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        /* Toast 通知樣式 */
+        #toast-container { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100; pointer-events: none; width: 90%; max-width: 400px; text-align: center; }
+        .toast { background: rgba(43, 32, 26, 0.9); color: white; padding: 10px 20px; border-radius: 20px; margin-bottom: 10px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; pointer-events: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .toast.show { opacity: 1; }
     </style>
 </head>
 <body class="w-full h-full sm:py-4">
 
     <main id="app-container" class="w-full max-w-[480px] h-[100dvh] sm:h-[95vh] bg-[#FFFDF5] sm:rounded-[2rem] sm:shadow-2xl overflow-hidden flex flex-col relative mx-auto border-0 sm:border border-gray-200">
+        
+        <div id="toast-container"></div>
 
         <div id="login-screen" class="absolute inset-0 z-50 bg-[#F4D35E] flex flex-col justify-center items-center p-8 transition-transform duration-500 transform translate-y-0">
             <div class="w-full max-w-xs bg-white/90 backdrop-blur p-6 rounded-3xl shadow-xl">
@@ -93,7 +86,6 @@
                     <h1 class="text-2xl font-bold text-[#2B201A] tracking-wide">搬家小岳</h1>
                     <p class="text-[#5FA09D] mt-1 text-sm font-medium">您的搬家諮詢師</p>
                 </div>
-                
                 <form id="login-form" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">怎麼稱呼您</label>
@@ -103,9 +95,7 @@
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Email</label>
                         <input type="email" id="user-email" class="w-full px-5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F4D35E] focus:border-[#F4D35E] outline-none transition text-gray-800 placeholder-gray-400" placeholder="example@email.com" required>
                     </div>
-                    <button type="submit" class="w-full py-3.5 bg-[#5FA09D] text-white font-bold rounded-xl shadow-lg shadow-teal-100 hover:bg-[#4A8B89] transform active:scale-95 transition mt-2">
-                        開始諮詢
-                    </button>
+                    <button type="submit" class="w-full py-3.5 bg-[#5FA09D] text-white font-bold rounded-xl shadow-lg shadow-teal-100 hover:bg-[#4A8B89] transform active:scale-95 transition mt-2">開始諮詢</button>
                 </form>
             </div>
             <div class="absolute bottom-6 text-xs text-[#2B201A]/50 font-medium">Powered by 搬家阿岳 2025</div>
@@ -131,7 +121,6 @@
         <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-5 scroll-smooth no-scrollbar pb-24"></div>
 
         <div class="bg-white border-t border-gray-100 p-3 sm:p-4 z-20 pb-safe space-y-3">
-            
             <a href="https://sites.google.com/view/bettermoving/ayuecalcutelate" target="_blank" class="block w-full bg-gradient-to-r from-[#5FA09D]/10 to-[#F4D35E]/10 border border-[#5FA09D]/30 p-3 rounded-2xl flex items-center justify-between hover:bg-[#5FA09D]/20 transition group relative overflow-hidden">
                 <div class="absolute top-0 right-0 -mt-4 -mr-4 text-[#5FA09D]/5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
@@ -152,26 +141,19 @@
             </a>
 
             <div id="preview-area" class="flex gap-3 mb-3 overflow-x-auto px-1 hidden pb-2"></div>
-            
             <div id="recording-status" class="hidden flex items-center justify-center p-2 text-red-500 text-sm font-bold animate-pulse">
                 <span>🔴 錄音中... 再次點擊結束 (將暫存)</span>
             </div>
 
             <form id="chat-form" class="relative flex items-end gap-2 bg-gray-50 p-1.5 rounded-[1.5rem] border border-gray-200 focus-within:ring-2 focus-within:ring-[#F4D35E] focus-within:border-[#F4D35E] transition-all">
-                
                 <label class="p-2.5 text-gray-400 hover:text-[#5FA09D] cursor-pointer transition rounded-full hover:bg-gray-200 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                     <input type="file" id="image-input" accept="image/*" multiple class="hidden">
                 </label>
-                
                 <button type="button" id="mic-btn" class="p-2.5 text-gray-400 hover:text-red-500 cursor-pointer transition rounded-full hover:bg-gray-200 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
                 </button>
-
                 <textarea id="message-input" rows="1" class="flex-1 bg-transparent border-0 py-3 px-2 focus:ring-0 text-[#2B201A] text-base placeholder-gray-400 resize-none max-h-32 leading-6" placeholder="輸入訊息..."></textarea>
-                
                 <button type="submit" id="send-btn" class="p-2.5 bg-[#5FA09D] text-white rounded-full hover:bg-[#4A8B89] shadow-md transform active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 translate-x-0.5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
                 </button>
@@ -180,7 +162,7 @@
     </main>
 
     <script>
-        // ★★★ 請將您的 GAS 網頁應用程式網址填入這裡 ★★★
+        // ★★★ 請將您的 GAS 網頁應用程式網址填入這裡 (exec 結尾) ★★★
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw5iZDojslvlkgU4_a2rx1KZV5uaUv1UMgS_nptShxqjOr8mFh1rcSaGhT3sNrprBEN/exec"; 
 
         const loginScreen = document.getElementById('login-screen');
@@ -190,19 +172,30 @@
         const messageInput = document.getElementById('message-input');
         const imageInput = document.getElementById('image-input');
         const previewArea = document.getElementById('preview-area');
-        
         const micBtn = document.getElementById('mic-btn');
         const recordingStatus = document.getElementById('recording-status');
         
         let userData = { name: '', email: '' };
         let selectedImages = [];
         let currentRowId = null; 
-        
-        // 錄音變數
         let mediaRecorder = null;
         let audioChunks = [];
         let isRecording = false;
-        let pendingAudioBlob = null; // 暫存錄音檔
+        let pendingAudioBlob = null;
+
+        // UI 提示工具 (取代 alert)
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
         function showWelcomeMessage() {
             const imgUrl1 = "https://i.meee.com.tw/LbBMY7T.png";
@@ -251,7 +244,7 @@
 
         imageInput.addEventListener('change', (e) => {
             const files = Array.from(e.target.files);
-            if(files.length + selectedImages.length > 5) { alert('最多 5 張圖片'); return; }
+            if(files.length + selectedImages.length > 5) { showToast('最多 5 張圖片'); return; }
             files.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = (event) => {
@@ -273,12 +266,16 @@
             imageInput.value = '';
         });
 
-        // 錄音邏輯 (修改：不自動發送，而是暫存)
+        // 錄音邏輯
         micBtn.addEventListener('click', async () => {
             if (pendingAudioBlob) {
-                if(!confirm("您已經有一段錄音等待發送，確定要重新錄製嗎？舊的錄音將會被刪除。")) return;
-                pendingAudioBlob = null;
-                updatePreview();
+                // 用自製的 UI 取代 confirm
+                if (window.confirm("您已經有一段錄音等待發送，確定要重新錄製嗎？舊的錄音將會被刪除。")) {
+                    pendingAudioBlob = null;
+                    updatePreview();
+                } else {
+                    return;
+                }
             }
 
             if (!isRecording) {
@@ -289,8 +286,8 @@
                     mediaRecorder.ondataavailable = event => { if (event.data.size > 0) audioChunks.push(event.data); };
                     mediaRecorder.onstop = () => {
                         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        pendingAudioBlob = audioBlob; // 存入全域變數
-                        updatePreview(); // 更新介面顯示
+                        pendingAudioBlob = audioBlob; 
+                        updatePreview(); 
                         stream.getTracks().forEach(track => track.stop());
                     };
                     mediaRecorder.start();
@@ -300,8 +297,7 @@
                     messageInput.placeholder = "錄音中... (點擊麥克風停止)";
                     messageInput.disabled = true;
                 } catch (err) {
-                    // GitHub Pages 上這裡會正常運作，只要是用 HTTPS
-                    alert("無法存取麥克風，請確認瀏覽器權限。");
+                    showToast("無法存取麥克風，請用瀏覽器直接開啟 GitHub 頁面。");
                 }
             } else {
                 mediaRecorder.stop();
@@ -314,7 +310,6 @@
             }
         });
 
-        // 更新預覽區 (同時顯示圖片和錄音檔)
         function updatePreview() {
             if (selectedImages.length === 0 && !pendingAudioBlob) {
                 previewArea.classList.add('hidden');
@@ -330,9 +325,7 @@
                 audioWrapper.id = 'audio-preview-item';
                 audioWrapper.className = 'relative flex-shrink-0 flex items-center justify-center w-16 h-16 bg-red-50 rounded-xl border border-red-200 shadow-sm';
                 audioWrapper.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
                     <button type="button" class="absolute -top-1.5 -right-1.5 bg-[#2B201A] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow border border-white">&times;</button>
                 `;
                 audioWrapper.querySelector('button').onclick = () => {
@@ -343,20 +336,18 @@
             }
         }
 
-        // 發送邏輯 (處理混合資料)
         chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const text = messageInput.value.trim();
             
             if (isRecording) {
                 micBtn.click();
-                setTimeout(()=>alert("錄音已結束並暫存，請再次點擊「發送」按鈕。"), 300);
+                setTimeout(()=>showToast("錄音已結束並暫存，請再次點擊「發送」按鈕。"), 300);
                 return;
             }
 
             if (!text && selectedImages.length === 0 && !pendingAudioBlob) return;
 
-            // 1. 準備 UI 顯示
             let userHtml = '';
             if (selectedImages.length > 0) {
                 userHtml += `<div class="flex gap-2 mb-2 flex-wrap justify-end">`;
@@ -369,17 +360,14 @@
             if (text) userHtml += `<div class="bubble bubble-user">${text.replace(/\n/g, '<br>')}</div>`;
             appendMessage(userHtml, 'user');
 
-            // 2. 清空輸入區
             messageInput.value = '';
             messageInput.style.height = 'auto';
             previewArea.innerHTML = '';
             previewArea.classList.add('hidden');
             
-            // 3. 準備資料傳送
             const imagesToSend = selectedImages.map(img => ({ mimeType: img.mimeType, base64: img.base64 }));
-            selectedImages = []; // 清空
+            selectedImages = [];
 
-            // 處理語音 Blob 轉 Base64
             if (pendingAudioBlob) {
                 const reader = new FileReader();
                 reader.readAsDataURL(pendingAudioBlob);
@@ -387,21 +375,17 @@
                     const base64Audio = reader.result.split(',')[1];
                     const mimeType = pendingAudioBlob.type;
                     const audioData = { base64: base64Audio, mimeType: mimeType };
-                    
-                    // 全部準備好，發送！
                     handleBackendCall(text, imagesToSend, audioData);
-                    pendingAudioBlob = null; // 清空
+                    pendingAudioBlob = null;
                 };
             } else {
-                // 沒有語音，直接發送
                 handleBackendCall(text, imagesToSend, null);
             }
         });
 
-        // 🟢 核心修改：使用 Fetch API 呼叫 GitHub
         function handleBackendCall(text, images, audioData) {
             if (GAS_API_URL.includes("您的ID")) {
-                alert("請先在程式碼中填入正確的 Google Apps Script 網址 (GAS_API_URL)！");
+                showToast("請先設定 GAS_API_URL！");
                 return;
             }
 
@@ -419,7 +403,6 @@
 
             fetch(GAS_API_URL, {
                 method: "POST",
-                // 使用 text/plain 可以避免部分 CORS 預檢請求問題，GAS 會自動解析
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify(payload)
             })
@@ -440,7 +423,6 @@
             .catch(error => {
                 removeLoading(loadingId);
                 appendMessage(`<div class="bubble bubble-ai text-red-500">連線失敗，請檢查網路或後端部署狀態。<br><small>${error.message}</small></div>`, 'ai');
-                console.error("Fetch Error:", error);
             });
         }
 
@@ -465,7 +447,7 @@
             if(confirm('確定要重新開始諮詢嗎？')) {
                 userData = { name: '', email: '' };
                 selectedImages = [];
-                pendingAudioBlob = null; // 清空
+                pendingAudioBlob = null;
                 currentRowId = null;
                 loginForm.reset();
                 messageInput.value = '';
