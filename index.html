@@ -26,55 +26,59 @@
             justify-content: center; 
             height: 100vh;
             color: var(--brand-text);
-            overflow: hidden; /* 防止雙重捲軸 */
+            overflow: hidden;
         }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* =========================================
-           PART 1: 啟動頁 (Launcher) 樣式
+           PART 1: 啟動頁 (Launcher) - 強制置中設計
            ========================================= */
         #launcher-view {
             display: none; /* 預設隱藏，由 JS 控制 */
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background: linear-gradient(135deg, #FFFDF5 0%, #FDF6E3 100%);
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 2rem;
-            box-sizing: border-box;
-            position: relative;
+            padding: 1rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 9999;
         }
 
         .launcher-card {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 2px solid #fff;
             padding: 2rem;
             border-radius: 2rem;
-            box-shadow: 0 10px 30px rgba(95, 160, 157, 0.15);
+            box-shadow: 0 20px 40px rgba(95, 160, 157, 0.2);
             max-width: 320px;
             width: 100%;
-            transform: translateY(0);
-            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: scale(1);
+            transition: transform 0.2s;
         }
         
-        .launcher-card:hover {
-            transform: translateY(-5px);
-        }
+        .launcher-card:hover { transform: scale(1.02); }
 
         .pulse-btn {
             background: var(--brand-teal);
             color: white;
             animation: pulse-shadow 2s infinite;
+            cursor: pointer;
         }
         
         @keyframes pulse-shadow {
             0% { box-shadow: 0 0 0 0 rgba(95, 160, 157, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(95, 160, 157, 0); }
+            70% { box-shadow: 0 0 0 15px rgba(95, 160, 157, 0); }
             100% { box-shadow: 0 0 0 0 rgba(95, 160, 157, 0); }
         }
 
@@ -87,7 +91,7 @@
             height: 100%;
         }
 
-        /* 對話框基礎樣式 */
+        /* 以下維持原有的 CSS */
         .bubble { 
             max-width: 88%; 
             padding: 1rem 1.2rem; 
@@ -97,77 +101,26 @@
             font-size: 0.95rem; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        
-        .bubble-user { 
-            background-color: var(--brand-teal); 
-            color: white; 
-            border-bottom-right-radius: 0.25rem; 
-            margin-left: auto; 
-            line-height: 1.6;
-        }
-        
-        .bubble-ai { 
-            background-color: #ffffff; 
-            color: var(--brand-text); 
-            border-bottom-left-radius: 0.25rem; 
-            margin-right: auto; 
-            border: 1px solid #F3F4F6;
-        }
-
-        /* AI 回覆排版優化 */
-        .ai-content {
-            font-size: 0.95rem;
-            line-height: 1.85;
-            color: #374151;
-            overflow-wrap: break-word;
-        }
+        .bubble-user { background-color: var(--brand-teal); color: white; border-bottom-right-radius: 0.25rem; margin-left: auto; line-height: 1.6; }
+        .bubble-ai { background-color: #ffffff; color: var(--brand-text); border-bottom-left-radius: 0.25rem; margin-right: auto; border: 1px solid #F3F4F6; }
+        .ai-content { font-size: 0.95rem; line-height: 1.85; color: #374151; overflow-wrap: break-word; }
         .ai-content p { margin-bottom: 1.2rem; }
         .ai-content p:last-child { margin-bottom: 0; }
-        .ai-content h3, .ai-content h4 {
-            font-size: 1.1em;
-            color: #2B201A;
-            font-weight: 700;
-            margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
-            line-height: 1.4;
-        }
-        .ai-content strong {
-            color: var(--brand-teal);
-            font-weight: 700;
-            background-color: rgba(95, 160, 157, 0.1);
-            padding: 0 4px;
-            border-radius: 4px;
-        }
+        .ai-content h3, .ai-content h4 { font-size: 1.1em; color: #2B201A; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.8rem; line-height: 1.4; }
+        .ai-content strong { color: var(--brand-teal); font-weight: 700; background-color: rgba(95, 160, 157, 0.1); padding: 0 4px; border-radius: 4px; }
         .ai-content ul, .ai-content ol { margin-left: 0.5rem; margin-bottom: 1.2rem; padding-left: 1.2rem; }
         .ai-content ul { list-style-type: disc; }
         .ai-content ol { list-style-type: decimal; }
         .ai-content li { margin-bottom: 0.5rem; padding-left: 0.2rem; }
         .ai-content hr { border: 0; height: 1px; background: #E5E7EB; margin: 1.5rem 0; }
         .ai-content a { color: var(--brand-teal); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
-        .ai-content blockquote {
-            border-left: 4px solid var(--brand-teal);
-            padding-left: 1rem;
-            margin-bottom: 1rem;
-            color: #6B7280;
-            font-style: italic;
-            background-color: #F9FAFB;
-            padding: 0.5rem 1rem;
-            border-radius: 0 0.5rem 0.5rem 0;
-        }
-
-        /* 動畫效果 */
+        .ai-content blockquote { border-left: 4px solid var(--brand-teal); padding-left: 1rem; margin-bottom: 1rem; color: #6B7280; font-style: italic; background-color: #F9FAFB; padding: 0.5rem 1rem; border-radius: 0 0.5rem 0.5rem 0; }
         .typing-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #9CA3AF; animation: typing 1.4s infinite ease-in-out both; margin: 0 2px; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-        
         .recording-pulse { animation: pulse-red 1.5s infinite; }
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; opacity: 0; transform: translateY(10px); }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -175,29 +128,25 @@
 <body class="w-full h-full sm:py-4">
 
     <div id="launcher-view">
-        <div class="launcher-card flex flex-col items-center">
+        <div class="launcher-card">
             <div class="w-24 h-24 mb-4 rounded-full overflow-hidden border-4 border-white shadow-md bg-white">
                 <img src="https://i.meee.com.tw/5ZnmWeT.png" alt="搬家小岳" class="w-full h-full object-cover">
             </div>
             <h1 class="text-xl font-bold text-[#2B201A] tracking-wide mb-1">搬家小岳</h1>
-            <p class="text-[#5FA09D] text-sm font-medium mb-6">照片估價 × 語音諮詢</p>
+            <p class="text-[#5FA09D] text-sm font-medium mb-6">您的搬家諮詢師</p>
             
-            <p class="text-gray-500 text-xs mb-4 leading-relaxed">
-                為了提供完整的語音辨識功能<br>請點擊下方按鈕開啟諮詢室
+            <p class="text-gray-500 text-xs mb-5 leading-relaxed font-medium">
+                點擊下方按鈕<br>開啟完整語音與照片估價功能
             </p>
 
-            <button onclick="openFullChat()" class="pulse-btn w-full py-3.5 rounded-xl font-bold shadow-lg hover:bg-[#4A8B89] transform active:scale-95 transition flex items-center justify-center gap-2">
-                <span>啟動語音互動</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
+            <button id="open-btn" class="pulse-btn w-full py-3.5 rounded-xl font-bold shadow-lg hover:bg-[#4A8B89] transform active:scale-95 transition flex items-center justify-center gap-2 text-sm sm:text-base">
+                <span>啟動語音互動 🎙️</span>
             </button>
         </div>
         <div class="absolute bottom-4 text-[10px] text-[#2B201A]/30 font-medium">Powered by 搬家阿岳</div>
     </div>
 
     <main id="app-view" class="w-full max-w-[480px] h-[100dvh] sm:h-[95vh] bg-[#FFFDF5] sm:rounded-[2rem] sm:shadow-2xl overflow-hidden flex flex-col relative mx-auto border-0 sm:border border-gray-200">
-
         <div id="login-screen" class="absolute inset-0 z-50 bg-[#F4D35E] flex flex-col justify-center items-center p-8 transition-transform duration-500 transform translate-y-0">
             <div class="w-full max-w-xs bg-white/90 backdrop-blur p-6 rounded-3xl shadow-xl">
                 <div class="text-center mb-8">
@@ -245,7 +194,6 @@
         <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-5 scroll-smooth no-scrollbar pb-24"></div>
 
         <div class="bg-white border-t border-gray-100 p-3 sm:p-4 z-20 pb-safe space-y-3">
-            
             <a href="https://sites.google.com/view/bettermoving/ayuecalcutelate" target="_blank" class="block w-full bg-gradient-to-r from-[#5FA09D]/10 to-[#F4D35E]/10 border border-[#5FA09D]/30 p-3 rounded-2xl flex items-center justify-between hover:bg-[#5FA09D]/20 transition group relative overflow-hidden">
                 <div class="absolute top-0 right-0 -mt-4 -mr-4 text-[#5FA09D]/5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
@@ -255,8 +203,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     </div>
                     <div class="text-left">
-                        <div class="font-bold text-[#2B201A] text-[15px]">拍拍照，AI 幫你算運費 📸</div>
-                        <div class="text-[11px] text-[#5FA09D] font-medium mt-0.5">30年經驗 × 千場紀錄，精準估價</div>
+                        <div class="font-bold text-[#2B201A] text-[15px]">拍拍照，AI 幫你算運費</div>
+                        <div class="text-[11px] text-[#5FA09D] font-medium mt-0.5">30年經驗 × 千場紀錄</div>
                     </div>
                 </div>
                 <div class="flex items-center text-[#5FA09D] font-bold text-sm group-hover:translate-x-1 transition relative z-10">
@@ -264,28 +212,17 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                 </div>
             </a>
-
             <div id="preview-area" class="flex gap-3 mb-3 overflow-x-auto px-1 hidden pb-2"></div>
-            
-            <div id="recording-status" class="hidden flex items-center justify-center p-2 text-red-500 text-sm font-bold animate-pulse">
-                <span>🔴 錄音中... 再次點擊麥克風結束</span>
-            </div>
-
+            <div id="recording-status" class="hidden flex items-center justify-center p-2 text-red-500 text-sm font-bold animate-pulse"><span>🔴 錄音中... 再次點擊麥克風結束</span></div>
             <form id="chat-form" class="relative flex items-end gap-2 bg-gray-50 p-1.5 rounded-[1.5rem] border border-gray-200 focus-within:ring-2 focus-within:ring-[#F4D35E] focus-within:border-[#F4D35E] transition-all">
-                
                 <label class="p-2.5 text-gray-400 hover:text-[#5FA09D] cursor-pointer transition rounded-full hover:bg-gray-200 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                     <input type="file" id="image-input" accept="image/*" multiple class="hidden">
                 </label>
-                
                 <button type="button" id="mic-btn" class="p-2.5 text-gray-400 hover:text-red-500 cursor-pointer transition rounded-full hover:bg-gray-200 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
                 </button>
-
                 <textarea id="message-input" rows="1" class="flex-1 bg-transparent border-0 py-3 px-2 focus:ring-0 text-[#2B201A] text-base placeholder-gray-400 resize-none max-h-32 leading-6" placeholder="輸入訊息..."></textarea>
-                
                 <button type="submit" id="send-btn" class="p-2.5 bg-[#5FA09D] text-white rounded-full hover:bg-[#4A8B89] shadow-md transform active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 translate-x-0.5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
                 </button>
@@ -295,48 +232,48 @@
 
     <script>
         // ============================================
-        // ★★★ 請填入您的 GAS 部署網址 (結尾為 /exec) ★★★
+        // ★★★ 請填入您的 GAS 部署網址 ★★★
         // ============================================
-        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwLPhSS5PNpur1COFFR5i_bKRUWWIjCFKtsF2dAG1RlyOE0vOLPdfcHuO6hYNxWHgAv/exec'; 
+        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbyH6f2SAQcOekVSXOh9rS6L9PRiOzxaw05YA_ySCsnVasOLwsu6jtvGUIGeHdQukNms/exec'; 
 
         // ============================================
-        // 1. 核心邏輯：自動判斷是否嵌入中 (Launcher 切換)
+        // 核心邏輯：網址參數強制顯示啟動頁
         // ============================================
-        function checkEmbedStatus() {
+        function initView() {
             const launcherView = document.getElementById('launcher-view');
             const appView = document.getElementById('app-view');
+            const openBtn = document.getElementById('open-btn');
             
-            // 判斷方式：如果當前視窗不是最頂層視窗 (代表被 iframe 嵌入)
-            // 注意：部分瀏覽器可能阻擋 window.top 存取，所以加 try-catch
-            let isEmbedded = false;
-            try {
-                isEmbedded = window.self !== window.top;
-            } catch (e) {
-                isEmbedded = true;
-            }
+            // 1. 檢查網址參數是否有 ?embed=true
+            const urlParams = new URLSearchParams(window.location.search);
+            const forceEmbed = urlParams.has('embed');
+            
+            // 2. 或是檢查是否被 iframe 包住 (作為備用判斷)
+            let isFrame = false;
+            try { isFrame = window.self !== window.top; } catch (e) { isFrame = true; }
 
-            if (isEmbedded) {
-                // 在 Google Site 裡 -> 顯示啟動頁
+            // 3. 如果有 embed 參數，或者被 iframe 包住 -> 顯示啟動頁
+            if (forceEmbed || isFrame) {
                 launcherView.style.display = 'flex';
                 appView.style.display = 'none';
             } else {
-                // 獨立視窗 -> 顯示 App
+                // 否則直接顯示 App
                 launcherView.style.display = 'none';
                 appView.style.display = 'flex';
             }
+
+            // 4. 按鈕點擊邏輯：打開「乾淨的網址」(去掉 ?embed=true)
+            openBtn.onclick = function() {
+                // 取得當前網址，去掉問號後面的參數
+                const cleanUrl = window.location.href.split('?')[0];
+                window.open(cleanUrl, '_blank');
+            };
         }
 
-        // 按鈕點擊：開啟新視窗
-        function openFullChat() {
-            window.open(window.location.href, '_blank');
-        }
-
-        // 初始化檢查
-        window.addEventListener('load', checkEmbedStatus);
-
+        window.addEventListener('load', initView);
 
         // ============================================
-        // 2. 以下為聊天室原本的邏輯
+        // 以下為聊天室原本的邏輯 (不變)
         // ============================================
         const loginScreen = document.getElementById('login-screen');
         const loginForm = document.getElementById('login-form');
@@ -345,7 +282,6 @@
         const messageInput = document.getElementById('message-input');
         const imageInput = document.getElementById('image-input');
         const previewArea = document.getElementById('preview-area');
-        
         const micBtn = document.getElementById('mic-btn');
         const recordingStatus = document.getElementById('recording-status');
         
@@ -360,7 +296,6 @@
             const imgUrl1 = "https://i.meee.com.tw/LbBMY7T.png";
             const imgUrl2 = "https://i.meee.com.tw/xAtt8vm.png";
             const welcomeText = `### 👋 嗨！我是搬家小岳\n不管是 **搬家費用**、**流程**、**打包技巧**，或是 **日子風水**，都可以問我喔！\n\n---\n您可以同時 **上傳照片** 📸、**錄音說明** 🎙️ 和 **打字**，全部準備好再一次發送，我會綜合起來幫您看！`;
-            
             const div = document.createElement('div');
             div.className = `flex w-full fade-in justify-start`;
             div.innerHTML = `
@@ -394,20 +329,16 @@
                 setTimeout(() => messageInput.focus(), 600);
             }
         });
-
         messageInput.addEventListener('input', function() {
             this.style.height = 'auto';
             const newHeight = Math.min(this.scrollHeight, 120);
             this.style.height = newHeight + 'px';
         });
-
         imageInput.addEventListener('change', (e) => {
             const files = Array.from(e.target.files);
             const remainingSlots = 5 - selectedImages.length;
             if (remainingSlots <= 0) return;
-            
             const filesToProcess = files.slice(0, remainingSlots);
-
             filesToProcess.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = (event) => {
@@ -430,11 +361,7 @@
         });
 
         micBtn.addEventListener('click', async () => {
-            if (pendingAudioBlob && !isRecording) {
-                pendingAudioBlob = null;
-                updatePreview();
-            }
-
+            if (pendingAudioBlob && !isRecording) { pendingAudioBlob = null; updatePreview(); }
             if (!isRecording) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -454,7 +381,7 @@
                     messageInput.placeholder = "錄音中... (再次點擊麥克風停止)";
                 } catch (err) {
                     console.error("Mic Error:", err);
-                    alert("無法存取麥克風。請確認您已允許瀏覽器使用麥克風權限。\n(若是透過 Google Sites 瀏覽，請點擊「啟動語音互動」開啟新視窗)");
+                    alert("無法存取麥克風。請確認您已允許瀏覽器使用麥克風權限。\n(若是透過 Google Sites 瀏覽，請務必點擊「啟動語音互動」開啟新視窗)");
                 }
             } else {
                 mediaRecorder.stop();
@@ -467,28 +394,15 @@
         });
 
         function updatePreview() {
-            if (selectedImages.length === 0 && !pendingAudioBlob) {
-                previewArea.classList.add('hidden');
-            } else {
-                previewArea.classList.remove('hidden');
-            }
+            if (selectedImages.length === 0 && !pendingAudioBlob) { previewArea.classList.add('hidden'); } else { previewArea.classList.remove('hidden'); }
             const existingAudio = document.getElementById('audio-preview-item');
             if (existingAudio) existingAudio.remove();
-
             if (pendingAudioBlob) {
                 const audioWrapper = document.createElement('div');
                 audioWrapper.id = 'audio-preview-item';
                 audioWrapper.className = 'relative flex-shrink-0 flex items-center justify-center w-16 h-16 bg-red-50 rounded-xl border border-red-200 shadow-sm';
-                audioWrapper.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                    </svg>
-                    <button type="button" class="absolute -top-1.5 -right-1.5 bg-[#2B201A] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow border border-white">&times;</button>
-                `;
-                audioWrapper.querySelector('button').onclick = () => {
-                    pendingAudioBlob = null;
-                    updatePreview();
-                };
+                audioWrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg><button type="button" class="absolute -top-1.5 -right-1.5 bg-[#2B201A] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow border border-white">&times;</button>`;
+                audioWrapper.querySelector('button').onclick = () => { pendingAudioBlob = null; updatePreview(); };
                 previewArea.appendChild(audioWrapper);
             }
         }
@@ -498,27 +412,21 @@
             const text = messageInput.value.trim();
             if (isRecording) { micBtn.click(); return; }
             if (!text && selectedImages.length === 0 && !pendingAudioBlob) return;
-
             let userHtml = '';
             if (selectedImages.length > 0) {
                 userHtml += `<div class="flex gap-2 mb-2 flex-wrap justify-end">`;
                 selectedImages.forEach(img => { userHtml += `<img src="data:${img.mimeType};base64,${img.base64}" class="w-28 h-28 object-cover rounded-xl border-2 border-white shadow-sm">`; });
                 userHtml += `</div>`;
             }
-            if (pendingAudioBlob) {
-                userHtml += `<div class="flex justify-end mb-2"><div class="bg-red-50 text-red-500 px-3 py-2 rounded-xl flex items-center gap-2 text-sm font-bold border border-red-100"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg> 語音訊息 (AI 辨識中)</div></div>`;
-            }
+            if (pendingAudioBlob) { userHtml += `<div class="flex justify-end mb-2"><div class="bg-red-50 text-red-500 px-3 py-2 rounded-xl flex items-center gap-2 text-sm font-bold border border-red-100"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg> 語音訊息 (AI 辨識中)</div></div>`; }
             if (text) userHtml += `<div class="bubble bubble-user">${text.replace(/\n/g, '<br>')}</div>`;
             appendMessage(userHtml, 'user');
-
             messageInput.value = '';
             messageInput.style.height = 'auto';
             previewArea.innerHTML = '';
             previewArea.classList.add('hidden');
-            
             const imagesToSend = selectedImages.map(img => ({ mimeType: img.mimeType, base64: img.base64 }));
             selectedImages = []; 
-
             if (pendingAudioBlob) {
                 const reader = new FileReader();
                 reader.readAsDataURL(pendingAudioBlob);
@@ -529,52 +437,31 @@
                     handleBackendCall(text, imagesToSend, audioData);
                     pendingAudioBlob = null;
                 };
-            } else {
-                handleBackendCall(text, imagesToSend, null);
-            }
+            } else { handleBackendCall(text, imagesToSend, null); }
         });
 
         function handleBackendCall(text, images, audioData) {
             const loadingId = appendLoading();
             scrollToBottom();
-            
-            if (!GAS_API_URL || GAS_API_URL.includes('您的ID')) {
-                removeLoading(loadingId);
-                appendMessage(`<div class="bubble bubble-ai text-red-500">⚠️ 請先在程式碼中設定 GAS_API_URL</div>`, 'ai');
-                return;
-            }
-
-            const payload = {
-                message: text,
-                images: images,
-                audio: audioData,
-                name: userData.name,
-                email: userData.email
-            };
-
+            if (!GAS_API_URL || GAS_API_URL.includes('您的ID')) { removeLoading(loadingId); appendMessage(`<div class="bubble bubble-ai text-red-500">⚠️ 請先設定 GAS_API_URL</div>`, 'ai'); return; }
+            const payload = { message: text, images: images, audio: audioData, name: userData.name, email: userData.email };
             fetch(GAS_API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
+            }).then(response => response.json()).then(data => {
                 removeLoading(loadingId);
                 if (data.status === 'success' && data.text) {
                     let aiContentHtml = `<div class="ai-content">${marked.parse(data.text)}</div>`;
                     appendMessage(`<div class="bubble bubble-ai">${aiContentHtml}</div>`, 'ai');
-                } else {
-                    throw new Error(data.message || 'Unknown error');
-                }
+                } else { throw new Error(data.message || 'Unknown error'); }
                 scrollToBottom();
-            })
-            .catch(error => {
+            }).catch(error => {
                 removeLoading(loadingId);
                 appendMessage(`<div class="bubble bubble-ai text-red-500">連線發生錯誤<br><small>${error.message}</small></div>`, 'ai');
                 console.error("API Error:", error);
             });
         }
-
         function appendMessage(htmlContent, type) {
             const div = document.createElement('div');
             div.className = `flex w-full fade-in ${type === 'user' ? 'justify-end' : 'justify-start'}`;
@@ -591,18 +478,8 @@
         }
         function removeLoading(id) { const el = document.getElementById(id); if(el) el.remove(); }
         function scrollToBottom() { setTimeout(() => { chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }, 100); }
-        
         document.getElementById('restart-btn').addEventListener('click', () => { 
-            userData = { name: '', email: '' };
-            selectedImages = [];
-            pendingAudioBlob = null;
-            loginForm.reset();
-            messageInput.value = '';
-            previewArea.innerHTML = '';
-            previewArea.classList.add('hidden');
-            loginScreen.style.transform = 'translateY(0)';
-            chatContainer.innerHTML = ''; 
-            showWelcomeMessage();
+            userData = { name: '', email: '' }; selectedImages = []; pendingAudioBlob = null; loginForm.reset(); messageInput.value = ''; previewArea.innerHTML = ''; previewArea.classList.add('hidden'); loginScreen.style.transform = 'translateY(0)'; chatContainer.innerHTML = ''; showWelcomeMessage();
         });
     </script>
 </body>
