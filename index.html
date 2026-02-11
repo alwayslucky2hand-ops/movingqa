@@ -31,25 +31,75 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* 對話框基礎樣式 */
         .bubble { 
             max-width: 88%; 
             padding: 1rem 1.2rem; 
             border-radius: 1.2rem; 
             position: relative; 
             word-wrap: break-word; 
-            line-height: 1.7; 
             font-size: 0.95rem; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .bubble-user { background-color: var(--brand-teal); color: white; border-bottom-right-radius: 0.25rem; margin-left: auto; }
-        .bubble-ai { background-color: #ffffff; color: var(--brand-text); border-bottom-left-radius: 0.25rem; margin-right: auto; border: 1px solid #F3F4F6; }
+        
+        .bubble-user { 
+            background-color: var(--brand-teal); 
+            color: white; 
+            border-bottom-right-radius: 0.25rem; 
+            margin-left: auto; 
+            line-height: 1.6;
+        }
+        
+        .bubble-ai { 
+            background-color: #ffffff; 
+            color: var(--brand-text); 
+            border-bottom-left-radius: 0.25rem; 
+            margin-right: auto; 
+            border: 1px solid #F3F4F6;
+        }
 
-        .ai-content strong { color: var(--brand-teal); font-weight: 700; background-color: rgba(95, 160, 157, 0.1); padding: 0 4px; border-radius: 4px; }
-        .ai-content h3, .ai-content h4 { font-size: 1.1em; font-weight: 700; margin-top: 12px; margin-bottom: 8px; color: var(--brand-text); border-left: 4px solid var(--brand-teal); padding-left: 10px; line-height: 1.4; }
-        .ai-content ul, .ai-content ol { margin-left: 20px; margin-bottom: 12px; list-style-type: disc; }
-        .ai-content li { margin-bottom: 6px; }
+        /* AI 回覆排版優化 */
+        .ai-content {
+            font-size: 0.95rem;
+            line-height: 1.85;
+            color: #374151;
+            overflow-wrap: break-word;
+        }
+        .ai-content p { margin-bottom: 1.2rem; }
+        .ai-content p:last-child { margin-bottom: 0; }
+        .ai-content h3, .ai-content h4 {
+            font-size: 1.1em;
+            color: #2B201A;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+        .ai-content strong {
+            color: var(--brand-teal);
+            font-weight: 700;
+            background-color: rgba(95, 160, 157, 0.1);
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+        .ai-content ul, .ai-content ol { margin-left: 0.5rem; margin-bottom: 1.2rem; padding-left: 1.2rem; }
+        .ai-content ul { list-style-type: disc; }
+        .ai-content ol { list-style-type: decimal; }
+        .ai-content li { margin-bottom: 0.5rem; padding-left: 0.2rem; }
+        .ai-content hr { border: 0; height: 1px; background: #E5E7EB; margin: 1.5rem 0; }
         .ai-content a { color: var(--brand-teal); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
+        .ai-content blockquote {
+            border-left: 4px solid var(--brand-teal);
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+            color: #6B7280;
+            font-style: italic;
+            background-color: #F9FAFB;
+            padding: 0.5rem 1rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
 
+        /* 動畫效果 */
         .typing-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #9CA3AF; animation: typing 1.4s infinite ease-in-out both; margin: 0 2px; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
@@ -64,18 +114,11 @@
 
         .fade-in { animation: fadeIn 0.3s ease-out forwards; opacity: 0; transform: translateY(10px); }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
-
-        /* 美化的 Toast 提示 (取代 alert) */
-        #toast-container { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100; pointer-events: none; width: 90%; max-width: 400px; text-align: center; }
-        .toast { background: rgba(43, 32, 26, 0.95); color: white; padding: 12px 24px; border-radius: 30px; margin-bottom: 10px; font-size: 0.95rem; opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); transform: translateY(-20px); pointer-events: auto; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); font-weight: 500; letter-spacing: 0.5px; }
-        .toast.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body class="w-full h-full sm:py-4">
 
     <main id="app-container" class="w-full max-w-[480px] h-[100dvh] sm:h-[95vh] bg-[#FFFDF5] sm:rounded-[2rem] sm:shadow-2xl overflow-hidden flex flex-col relative mx-auto border-0 sm:border border-gray-200">
-        
-        <div id="toast-container"></div>
 
         <div id="login-screen" class="absolute inset-0 z-50 bg-[#F4D35E] flex flex-col justify-center items-center p-8 transition-transform duration-500 transform translate-y-0">
             <div class="w-full max-w-xs bg-white/90 backdrop-blur p-6 rounded-3xl shadow-xl">
@@ -86,6 +129,7 @@
                     <h1 class="text-2xl font-bold text-[#2B201A] tracking-wide">搬家小岳</h1>
                     <p class="text-[#5FA09D] mt-1 text-sm font-medium">您的搬家諮詢師</p>
                 </div>
+                
                 <form id="login-form" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">怎麼稱呼您</label>
@@ -95,7 +139,9 @@
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Email</label>
                         <input type="email" id="user-email" class="w-full px-5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F4D35E] focus:border-[#F4D35E] outline-none transition text-gray-800 placeholder-gray-400" placeholder="example@email.com" required>
                     </div>
-                    <button type="submit" class="w-full py-3.5 bg-[#5FA09D] text-white font-bold rounded-xl shadow-lg shadow-teal-100 hover:bg-[#4A8B89] transform active:scale-95 transition mt-2">開始諮詢</button>
+                    <button type="submit" class="w-full py-3.5 bg-[#5FA09D] text-white font-bold rounded-xl shadow-lg shadow-teal-100 hover:bg-[#4A8B89] transform active:scale-95 transition mt-2">
+                        開始諮詢
+                    </button>
                 </form>
             </div>
             <div class="absolute bottom-6 text-xs text-[#2B201A]/50 font-medium">Powered by 搬家阿岳 2025</div>
@@ -113,20 +159,15 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="flex gap-1 items-center">
-                <a id="open-full-btn" href="#" target="_blank" class="hidden p-2 text-white bg-[#5FA09D] rounded-full text-xs font-bold px-3 hover:bg-[#4A8B89] transition shadow-sm no-underline">
-                    ↗ 全螢幕錄音
-                </a>
-                <button id="restart-btn" class="p-2 text-gray-400 hover:text-[#5FA09D] hover:bg-gray-50 rounded-full transition" title="重新開始諮詢">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                </button>
-            </div>
+            <button id="restart-btn" class="p-2 text-gray-400 hover:text-[#5FA09D] hover:bg-gray-50 rounded-full transition" title="重新開始">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+            </button>
         </header>
 
         <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-5 scroll-smooth no-scrollbar pb-24"></div>
 
         <div class="bg-white border-t border-gray-100 p-3 sm:p-4 z-20 pb-safe space-y-3">
+            
             <a href="https://sites.google.com/view/bettermoving/ayuecalcutelate" target="_blank" class="block w-full bg-gradient-to-r from-[#5FA09D]/10 to-[#F4D35E]/10 border border-[#5FA09D]/30 p-3 rounded-2xl flex items-center justify-between hover:bg-[#5FA09D]/20 transition group relative overflow-hidden">
                 <div class="absolute top-0 right-0 -mt-4 -mr-4 text-[#5FA09D]/5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
@@ -147,20 +188,26 @@
             </a>
 
             <div id="preview-area" class="flex gap-3 mb-3 overflow-x-auto px-1 hidden pb-2"></div>
+            
             <div id="recording-status" class="hidden flex items-center justify-center p-2 text-red-500 text-sm font-bold animate-pulse">
-                <span>🔴 錄音中... (點擊麥克風停止)</span>
+                <span>🔴 錄音中... 再次點擊麥克風結束</span>
             </div>
 
             <form id="chat-form" class="relative flex items-end gap-2 bg-gray-50 p-1.5 rounded-[1.5rem] border border-gray-200 focus-within:ring-2 focus-within:ring-[#F4D35E] focus-within:border-[#F4D35E] transition-all">
+                
                 <label class="p-2.5 text-gray-400 hover:text-[#5FA09D] cursor-pointer transition rounded-full hover:bg-gray-200 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                     <input type="file" id="image-input" accept="image/*" multiple class="hidden">
                 </label>
                 
                 <button type="button" id="mic-btn" class="p-2.5 text-gray-400 hover:text-red-500 cursor-pointer transition rounded-full hover:bg-gray-200 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
                 </button>
+
                 <textarea id="message-input" rows="1" class="flex-1 bg-transparent border-0 py-3 px-2 focus:ring-0 text-[#2B201A] text-base placeholder-gray-400 resize-none max-h-32 leading-6" placeholder="輸入訊息..."></textarea>
+                
                 <button type="submit" id="send-btn" class="p-2.5 bg-[#5FA09D] text-white rounded-full hover:bg-[#4A8B89] shadow-md transform active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 translate-x-0.5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
                 </button>
@@ -169,8 +216,10 @@
     </main>
 
     <script>
-        // ★★★ 請確認這裡填入的是您的 GAS 網頁應用程式網址 (exec 結尾) ★★★
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzKrRKLg_zPFaRyTZn_fc2NYlqVwrd1ulItfuS0tGqg1dJt84Eudw8VEdO9Mrn44X1l/exec"; 
+        // ============================================
+        // ★★★ 請在此填入您的 GAS Web App 網址 ★★★
+        // ============================================
+        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwLPhSS5PNpur1COFFR5i_bKRUWWIjCFKtsF2dAG1RlyOE0vOLPdfcHuO6hYNxWHgAv/exec'; 
 
         const loginScreen = document.getElementById('login-screen');
         const loginForm = document.getElementById('login-form');
@@ -179,40 +228,16 @@
         const messageInput = document.getElementById('message-input');
         const imageInput = document.getElementById('image-input');
         const previewArea = document.getElementById('preview-area');
+        
         const micBtn = document.getElementById('mic-btn');
         const recordingStatus = document.getElementById('recording-status');
-        const openFullBtn = document.getElementById('open-full-btn');
         
         let userData = { name: '', email: '' };
         let selectedImages = [];
-        let currentRowId = null; 
         let mediaRecorder = null;
         let audioChunks = [];
         let isRecording = false;
         let pendingAudioBlob = null;
-
-        function checkEnvironment() {
-            if (window.self !== window.top) {
-                micBtn.classList.add('hidden');
-                openFullBtn.classList.remove('hidden');
-                openFullBtn.href = window.location.href;
-                messageInput.placeholder = "嵌入模式無法錄音，請點擊上方開啟全螢幕";
-            }
-        }
-        checkEnvironment();
-
-        function showToast(message) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
 
         function showWelcomeMessage() {
             const imgUrl1 = "https://i.meee.com.tw/LbBMY7T.png";
@@ -261,8 +286,12 @@
 
         imageInput.addEventListener('change', (e) => {
             const files = Array.from(e.target.files);
-            if(files.length + selectedImages.length > 5) { showToast('最多 5 張圖片'); return; }
-            files.forEach(file => {
+            const remainingSlots = 5 - selectedImages.length;
+            if (remainingSlots <= 0) return;
+            
+            const filesToProcess = files.slice(0, remainingSlots);
+
+            filesToProcess.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     const imgWrapper = document.createElement('div');
@@ -283,10 +312,8 @@
             imageInput.value = '';
         });
 
-        // 錄音邏輯 (無 Alert 版)
         micBtn.addEventListener('click', async () => {
-            // 如果已經有暫存，直接清除並開始新的，不跳詢問視窗
-            if (pendingAudioBlob) {
+            if (pendingAudioBlob && !isRecording) {
                 pendingAudioBlob = null;
                 updatePreview();
             }
@@ -299,27 +326,25 @@
                     mediaRecorder.ondataavailable = event => { if (event.data.size > 0) audioChunks.push(event.data); };
                     mediaRecorder.onstop = () => {
                         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        pendingAudioBlob = audioBlob; 
-                        updatePreview(); 
+                        pendingAudioBlob = audioBlob;
+                        updatePreview();
                         stream.getTracks().forEach(track => track.stop());
                     };
                     mediaRecorder.start();
                     isRecording = true;
                     micBtn.classList.add('recording-pulse', 'text-red-500', 'bg-red-50');
                     recordingStatus.classList.remove('hidden');
-                    messageInput.placeholder = "錄音中... (點擊麥克風停止)";
-                    messageInput.disabled = true;
+                    messageInput.placeholder = "錄音中... (再次點擊麥克風停止)";
                 } catch (err) {
-                    showToast("無法存取麥克風，請確認瀏覽器權限或開啟完整視窗。");
+                    console.error("Mic Error:", err);
+                    alert("無法存取麥克風。請確認您已允許瀏覽器使用麥克風權限。\n(若是透過 Google Sites 瀏覽，請嘗試使用「在新分頁開啟」功能)");
                 }
             } else {
-                // 停止錄音
                 mediaRecorder.stop();
                 isRecording = false;
                 micBtn.classList.remove('recording-pulse', 'text-red-500', 'bg-red-50');
                 recordingStatus.classList.add('hidden');
                 messageInput.placeholder = "輸入訊息...";
-                messageInput.disabled = false;
                 messageInput.focus();
             }
         });
@@ -330,7 +355,6 @@
             } else {
                 previewArea.classList.remove('hidden');
             }
-
             const existingAudio = document.getElementById('audio-preview-item');
             if (existingAudio) existingAudio.remove();
 
@@ -339,7 +363,9 @@
                 audioWrapper.id = 'audio-preview-item';
                 audioWrapper.className = 'relative flex-shrink-0 flex items-center justify-center w-16 h-16 bg-red-50 rounded-xl border border-red-200 shadow-sm';
                 audioWrapper.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
                     <button type="button" class="absolute -top-1.5 -right-1.5 bg-[#2B201A] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow border border-white">&times;</button>
                 `;
                 audioWrapper.querySelector('button').onclick = () => {
@@ -353,14 +379,7 @@
         chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const text = messageInput.value.trim();
-            
-            // 如果正在錄音，點擊發送鍵視為「停止錄音」
-            if (isRecording) {
-                micBtn.click();
-                showToast("錄音已結束並暫存，請再次點擊「發送」按鈕。");
-                return;
-            }
-
+            if (isRecording) { micBtn.click(); return; }
             if (!text && selectedImages.length === 0 && !pendingAudioBlob) return;
 
             let userHtml = '';
@@ -370,7 +389,7 @@
                 userHtml += `</div>`;
             }
             if (pendingAudioBlob) {
-                userHtml += `<div class="flex justify-end mb-2"><div class="bg-red-50 text-red-500 px-3 py-2 rounded-xl flex items-center gap-2 text-sm font-bold border border-red-100"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg> 語音訊息 (AI 聆聽中...)</div></div>`;
+                userHtml += `<div class="flex justify-end mb-2"><div class="bg-red-50 text-red-500 px-3 py-2 rounded-xl flex items-center gap-2 text-sm font-bold border border-red-100"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg> 語音訊息 (AI 辨識中)</div></div>`;
             }
             if (text) userHtml += `<div class="bubble bubble-user">${text.replace(/\n/g, '<br>')}</div>`;
             appendMessage(userHtml, 'user');
@@ -381,7 +400,7 @@
             previewArea.classList.add('hidden');
             
             const imagesToSend = selectedImages.map(img => ({ mimeType: img.mimeType, base64: img.base64 }));
-            selectedImages = [];
+            selectedImages = []; 
 
             if (pendingAudioBlob) {
                 const reader = new FileReader();
@@ -398,46 +417,50 @@
             }
         });
 
+        // ★★★ 關鍵修正：使用 fetch 呼叫遠端 API (替代 google.script.run) ★★★
         function handleBackendCall(text, images, audioData) {
-            if (GAS_API_URL.includes("您的ID")) {
-                showToast("請先設定 GAS_API_URL！");
+            const loadingId = appendLoading();
+            scrollToBottom();
+            
+            // 檢查是否設定了 API URL
+            if (!GAS_API_URL || GAS_API_URL.includes('您的ID')) {
+                removeLoading(loadingId);
+                appendMessage(`<div class="bubble bubble-ai text-red-500">⚠️ 請先在程式碼中設定 GAS_API_URL (GAS 部署網址)</div>`, 'ai');
                 return;
             }
 
-            const loadingId = appendLoading();
-            scrollToBottom();
-
-            const payload = { 
-                name: userData.name, 
-                email: userData.email, 
-                message: text, 
-                images: images, 
-                audio: audioData, 
-                rowId: currentRowId 
+            const payload = {
+                message: text,
+                images: images,
+                audio: audioData,
+                name: userData.name,
+                email: userData.email
             };
 
+            // 使用標準 fetch 發送 POST 請求
             fetch(GAS_API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                method: 'POST',
+                // 使用 text/plain 可以避免部分瀏覽器對 GAS 發出 OPTIONS 預檢請求導致的 CORS 錯誤
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8', 
+                },
                 body: JSON.stringify(payload)
             })
             .then(response => response.json())
-            .then(response => {
+            .then(data => {
                 removeLoading(loadingId);
-                
-                if (response.error) {
-                     appendMessage(`<div class="bubble bubble-ai text-red-500">系統錯誤：${response.error}</div>`, 'ai');
-                     return;
+                if (data.status === 'success' && data.text) {
+                    let aiContentHtml = `<div class="ai-content">${marked.parse(data.text)}</div>`;
+                    appendMessage(`<div class="bubble bubble-ai">${aiContentHtml}</div>`, 'ai');
+                } else {
+                    throw new Error(data.message || 'Unknown error');
                 }
-
-                const aiContentHtml = `<div class="ai-content">${marked.parse(response.text)}</div>`;
-                appendMessage(`<div class="bubble bubble-ai">${aiContentHtml}</div>`, 'ai');
-                if (response.rowId) currentRowId = response.rowId;
                 scrollToBottom();
             })
             .catch(error => {
                 removeLoading(loadingId);
-                appendMessage(`<div class="bubble bubble-ai text-red-500">連線失敗，請檢查網路或後端部署狀態。<br><small>${error.message}</small></div>`, 'ai');
+                appendMessage(`<div class="bubble bubble-ai text-red-500">連線發生錯誤，請稍後再試。<br><small>${error.message}</small></div>`, 'ai');
+                console.error("API Error:", error);
             });
         }
 
@@ -459,20 +482,16 @@
         function scrollToBottom() { setTimeout(() => { chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }, 100); }
         
         document.getElementById('restart-btn').addEventListener('click', () => { 
-            // 這裡也用原生 confirm 比較安全，但為了統一體驗，您可以選擇保留或移除
-            if(window.confirm('確定要重新開始諮詢嗎？')) {
-                userData = { name: '', email: '' };
-                selectedImages = [];
-                pendingAudioBlob = null;
-                currentRowId = null;
-                loginForm.reset();
-                messageInput.value = '';
-                previewArea.innerHTML = '';
-                previewArea.classList.add('hidden');
-                loginScreen.style.transform = 'translateY(0)';
-                chatContainer.innerHTML = ''; 
-                showWelcomeMessage();
-            }
+            userData = { name: '', email: '' };
+            selectedImages = [];
+            pendingAudioBlob = null;
+            loginForm.reset();
+            messageInput.value = '';
+            previewArea.innerHTML = '';
+            previewArea.classList.add('hidden');
+            loginScreen.style.transform = 'translateY(0)';
+            chatContainer.innerHTML = ''; 
+            showWelcomeMessage();
         });
     </script>
 </body>
